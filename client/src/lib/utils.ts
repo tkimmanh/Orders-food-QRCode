@@ -10,6 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 export const normalizePath = (path: string) => {
   return path.startsWith("/") ? path.slice(1) : path;
 };
+
 export const handleErrorApi = ({
   error,
   setError,
@@ -34,4 +35,13 @@ export const handleErrorApi = ({
       duration: duration ?? 5000,
     });
   }
+};
+
+const isBrowser = typeof window !== "undefined";
+
+export const getAccessTokenFormLocalStorage = () => {
+  return isBrowser ? localStorage.getItem("accessToken") : null;
+};
+export const getRefreshTokenFormLocalStorage = () => {
+  return isBrowser ? localStorage.getItem("refreshToken") : null;
 };

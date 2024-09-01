@@ -8,7 +8,7 @@ class AuthApiRequest {
   }
   // gọi tới nextjs server
   async clientLogin(body: LoginBodyType) {
-    return await http.post("/api/auth/login", body, {
+    return await http.post<LoginResType>("/api/auth/login", body, {
       baseUrl: "",
     });
   }

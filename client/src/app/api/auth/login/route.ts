@@ -1,4 +1,4 @@
-import { authApiRequest } from "@/app/apiRequest/auth";
+import { authApiRequest } from "@/apiRequest/auth";
 import { HttpError } from "@/lib/http";
 import { LoginBodyType } from "@/schemaValidations/auth.schema";
 import jwt from "jsonwebtoken";

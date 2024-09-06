@@ -55,7 +55,7 @@ export class EntityError extends HttpError {
   }
 }
 
-let clientLogoutRequest: null | Promise<any> = null;
+let nextServerLogoutRequest: null | Promise<any> = null;
 
 const isClient = typeof window !== "undefined";
 
@@ -119,8 +119,8 @@ const request = async <Response>(
       );
     } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
       if (isClient) {
-        if (!clientLogoutRequest) {
-          clientLogoutRequest = fetch("/api/auth/logout", {
+        if (!nextServerLogoutRequest) {
+          nextServerLogoutRequest = fetch("/api/auth/logout", {
             method: "POST",
             body: null, //logout cho phép luôn thành công
             headers: {
@@ -128,12 +128,12 @@ const request = async <Response>(
             } as any,
           });
           try {
-            await clientLogoutRequest;
+            await nextServerLogoutRequest;
           } catch (error) {
           } finally {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
-            clientLogoutRequest = null;
+            nextServerLogoutRequest = null;
             location.href = "/login";
           }
         }

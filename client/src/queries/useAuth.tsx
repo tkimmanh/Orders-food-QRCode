@@ -3,12 +3,12 @@ import { useMutation } from "@tanstack/react-query";
 
 export const useLoginMutation = () => {
   return useMutation({
-    mutationFn: authApiRequest.clientLogin,
+    mutationFn: authApiRequest.nextServerLogin,
   });
 };
 
 export const useLogoutMutation = () => {
   return useMutation({
-    mutationFn: authApiRequest.clientLogout,
+    mutationFn: authApiRequest.nextServerLogout,
   });
 };

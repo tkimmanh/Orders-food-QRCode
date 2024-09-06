@@ -10,11 +10,15 @@ const LogoutPage = () => {
   const ref = useRef<any>(null);
   const router = useRouter();
   const refreshTokenFormUrl = searchParams.get("refreshToken");
+  const accessTokenFormUrl = searchParams.get("accessToken");
 
   useEffect(() => {
     if (
       ref.current ||
-      refreshTokenFormUrl !== getRefreshTokenFormLocalStorage()
+      (refreshTokenFormUrl &&
+        refreshTokenFormUrl !== getRefreshTokenFormLocalStorage()) ||
+      (accessTokenFormUrl &&
+        accessTokenFormUrl !== getRefreshTokenFormLocalStorage())
     ) {
       return;
     }

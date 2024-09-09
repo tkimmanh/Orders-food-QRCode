@@ -7,7 +7,9 @@ import { toast } from "@/hooks/use-toast";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
 export const normalizePath = (path: string) => {
+  // nếu path bắt đầu bằng / thì cắt bỏ đi
   return path.startsWith("/") ? path.slice(1) : path;
 };
 
@@ -44,4 +46,10 @@ export const getAccessTokenFormLocalStorage = () => {
 };
 export const getRefreshTokenFormLocalStorage = () => {
   return isBrowser ? localStorage.getItem("refreshToken") : null;
+};
+export const setAccessTokenToLocalStorage = (accessToken: string) => {
+  return isBrowser && localStorage.setItem("accessToken", accessToken);
+};
+export const setRefreshTokenToLocalStorage = (refreshToken: string) => {
+  return isBrowser && localStorage.setItem("refreshToken", refreshToken);
 };

@@ -8,6 +8,14 @@ import {
 } from "@/schemaValidations/auth.schema";
 
 class AuthApiRequest {
+  public refreshTokenRequest: Promise<{
+    status: number;
+    payload: RefreshTokenResType;
+  }> | null;
+
+  constructor() {
+    this.refreshTokenRequest = null;
+  }
   // gọi tới server login
   async severLogin(body: LoginBodyType) {
     return await http.post<LoginResType>("/auth/login", body);
@@ -47,14 +55,21 @@ class AuthApiRequest {
     });
   }
 
-  async nextServerRefreshToken(body: RefreshTokenBodyType) {
-    return await http.post<RefreshTokenResType>(
+  async nextServerRefreshToken() {
+    //đảm bảo rằng không bị duplicate request refresh token
+    if (this.refreshTokenRequest) {
+      return this.refreshTokenRequest;
+    }
+    this.refreshTokenRequest = http.post<RefreshTokenResType>(
       "/api/auth/refresh-token",
-      body,
+      null,
       {
         baseUrl: "",
       }
     );
+    const result = await this.refreshTokenRequest;
+    this.refreshTokenRequest = null;
+    return result;
   }
 }
 

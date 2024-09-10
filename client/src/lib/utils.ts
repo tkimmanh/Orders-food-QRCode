@@ -78,8 +78,16 @@ export const checkRefreshToken = async (param: {
     exp: number;
     iat: number;
   };
-
-  const now = Math.round(new Date().getTime() / 1000);
+  /*
+  Do khi lưu RefreshToken vào cookie bằng expires thì sẽ bị sai 1 vài ms ,
+  khiến middleware sẽ hoạt động không đúng với yêu cầu 
+  lên phải - đi 1s để đảm bảo chính xác
+  - bên middleware kiểm tra có refreshToken là đã đăng nhập -> redirect : /
+  - tại đây kiểm tra refreshToken hết hạn thì đăng xuất -> redirect : /login
+  -> Do sai về thời gian và điều kiện được chạy trước refreshToken -> redirect vào : / -> nên sẽ bị redirect không đúng
+  - 
+  */
+  const now = new Date().getTime() / 1000 - 1;
   // refresh token hết hạn thì đăng xuất
   if (decodedRefreshToken.exp <= now) {
     removeTokenFromLocalStorage();

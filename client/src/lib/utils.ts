@@ -56,6 +56,11 @@ export const setRefreshTokenToLocalStorage = (refreshToken: string) => {
   return isBrowser && localStorage.setItem("refreshToken", refreshToken);
 };
 
+export const removeTokenFromLocalStorage = () => {
+  isBrowser && localStorage.removeItem("accessToken");
+  isBrowser && localStorage.removeItem("refreshToken");
+};
+
 export const checkRefreshToken = async (param: {
   onSuccess?: () => void;
   onError?: () => void;
@@ -75,10 +80,13 @@ export const checkRefreshToken = async (param: {
   };
 
   const now = Math.round(new Date().getTime() / 1000);
-  // refresh token hết hạn không xử lý
-  if (decodedRefreshToken.exp <= now) return;
+  // refresh token hết hạn thì đăng xuất
+  if (decodedRefreshToken.exp <= now) {
+    removeTokenFromLocalStorage();
+    param?.onError && param.onError();
+    return;
+  }
   // nếu thời gian của accessToken còn 1/3 thì sẽ cho check refresh token
-
   if (
     decodedAccessToken.exp - now <
     (decodedAccessToken.exp - decodedAccessToken.iat) / 3

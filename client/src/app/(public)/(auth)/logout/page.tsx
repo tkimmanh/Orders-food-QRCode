@@ -1,4 +1,5 @@
 "use client";
+import { useAppContext } from "@/components/app-provider";
 import { getRefreshTokenFormLocalStorage } from "@/lib/utils";
 import { useLogoutMutation } from "@/queries/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,6 +10,7 @@ const LogoutPage = () => {
   const searchParams = useSearchParams();
   const ref = useRef<any>(null);
   const router = useRouter();
+  const { setIsAuth } = useAppContext();
   const refreshTokenFormUrl = searchParams.get("refreshToken");
   const accessTokenFormUrl = searchParams.get("accessToken");
 
@@ -29,9 +31,10 @@ const LogoutPage = () => {
       setTimeout(() => {
         ref.current = null;
       }, 1000);
+      setIsAuth(false);
       router.push("/login");
     });
-  }, [accessTokenFormUrl, mutateAsync, refreshTokenFormUrl, router]);
+  }, [accessTokenFormUrl, mutateAsync, refreshTokenFormUrl, router, setIsAuth]);
   return null;
 };
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppContext } from "@/components/app-provider";
 import { getAccessTokenFormLocalStorage } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -26,11 +27,8 @@ const menuItems = [
 ];
 
 export default function NavItems({ className }: { className?: string }) {
-  const [isAuth, setIsAuth] = useState(false);
+  const { isAuth } = useAppContext();
 
-  useEffect(() => {
-    setIsAuth(Boolean(getAccessTokenFormLocalStorage()));
-  }, []);
   return menuItems.map((item) => {
     if ((!item.authRequired && isAuth) || (item.authRequired && !isAuth))
       return null;

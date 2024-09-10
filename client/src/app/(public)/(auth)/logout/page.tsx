@@ -14,13 +14,15 @@ const LogoutPage = () => {
 
   useEffect(() => {
     if (
-      ref.current ||
-      (refreshTokenFormUrl &&
-        refreshTokenFormUrl !== getRefreshTokenFormLocalStorage()) ||
+      (!ref.current &&
+        refreshTokenFormUrl &&
+        refreshTokenFormUrl === getRefreshTokenFormLocalStorage()) ||
       (accessTokenFormUrl &&
-        accessTokenFormUrl !== getRefreshTokenFormLocalStorage())
+        accessTokenFormUrl === getRefreshTokenFormLocalStorage())
     ) {
       return;
+    } else {
+      router.push("/");
     }
     ref.current = mutateAsync;
     mutateAsync().then(() => {

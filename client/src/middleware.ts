@@ -11,7 +11,9 @@ export function middleware(request: NextRequest) {
 
   // chưa đăng nhập và truy cập vào các privte route , manage ...
   if (privatePaths.some((path) => pathname.startsWith(path)) && !refreshToken) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const url = new URL("/login", request.url);
+    url.searchParams.set("clearToken", "true");
+    return NextResponse.redirect(url);
   }
 
   // đã đăng nhập không vào được các unAuthPaths , các trang login register ...

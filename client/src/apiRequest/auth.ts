@@ -56,7 +56,6 @@ class AuthApiRequest {
   }
 
   async nextServerRefreshToken() {
-    //đảm bảo rằng không bị duplicate request refresh token
     if (this.refreshTokenRequest) {
       return this.refreshTokenRequest;
     }

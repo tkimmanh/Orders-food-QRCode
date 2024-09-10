@@ -4,7 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import AppProvider from "@/components/app-provider";
-import RefreshToken from "@/components/refresh-token";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -37,7 +37,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
-            <RefreshToken />
+            <Toaster />
           </ThemeProvider>
         </AppProvider>
       </body>

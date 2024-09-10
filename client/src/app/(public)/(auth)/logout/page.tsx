@@ -29,8 +29,8 @@ const LogoutPage = () => {
       }, 1000);
       router.push("/login");
     });
-  }, [mutateAsync, refreshTokenFormUrl, router]);
-  return <div>LogoutPage</div>;
+  }, [accessTokenFormUrl, mutateAsync, refreshTokenFormUrl, router]);
+  return null;
 };
 
 export default LogoutPage;

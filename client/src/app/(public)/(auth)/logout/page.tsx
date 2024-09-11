@@ -3,9 +3,9 @@ import { useAppContext } from "@/components/app-provider";
 import { getRefreshTokenFormLocalStorage } from "@/lib/utils";
 import { useLogoutMutation } from "@/queries/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 
-const LogoutPage = () => {
+function Logout() {
   const { mutateAsync } = useLogoutMutation();
   const searchParams = useSearchParams();
   const ref = useRef<any>(null);
@@ -36,6 +36,14 @@ const LogoutPage = () => {
     });
   }, [accessTokenFormUrl, mutateAsync, refreshTokenFormUrl, router, setIsAuth]);
   return null;
+}
+
+const LogoutPage = () => {
+  return (
+    <Suspense>
+      <Logout></Logout>
+    </Suspense>
+  );
 };
 
 export default LogoutPage;

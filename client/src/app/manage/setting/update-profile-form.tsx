@@ -29,14 +29,14 @@ export default function UpdateProfileForm() {
     resolver: zodResolver(UpdateMeBody),
     defaultValues: {
       name: "",
-      avatar: "",
+      avatar: undefined,
     },
   });
   useEffect(() => {
     if (data) {
       const { avatar, name } = data?.payload.data;
       form.reset({
-        avatar: avatar ?? "",
+        avatar: avatar ?? undefined,
         name,
       });
     }

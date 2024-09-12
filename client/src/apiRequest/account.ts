@@ -5,6 +5,7 @@ import {
   UpdateEmployeeAccountBodyType,
   UpdateMeBodyType,
   CreateEmployeeAccountBodyType,
+  AccountListResType,
 } from "@/schemaValidations/account.schema";
 
 const prefix = "accounts";
@@ -19,7 +20,7 @@ class AccountApiRequest {
     return http.put<AccountResType>(`${prefix}/change-password`, body);
   }
   list() {
-    return http.get<AccountResType[]>(`${prefix}`);
+    return http.get<AccountListResType>(`${prefix}`);
   }
   addEmployee(body: CreateEmployeeAccountBodyType) {
     return http.post<AccountResType>(`${prefix}`, body);
@@ -27,7 +28,7 @@ class AccountApiRequest {
   updateEmployee(id: number, body: UpdateEmployeeAccountBodyType) {
     return http.put<AccountResType>(`${prefix}/detail/${id}`, body);
   }
-  getEmployee(id: string) {
+  getEmployee(id: number) {
     return http.get<AccountResType>(`${prefix}/detail/${id}`);
   }
   deleteEmployee(id: string) {

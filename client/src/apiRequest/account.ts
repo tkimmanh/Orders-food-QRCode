@@ -31,8 +31,8 @@ class AccountApiRequest {
   getEmployee(id: number) {
     return http.get<AccountResType>(`${prefix}/detail/${id}`);
   }
-  deleteEmployee(id: string) {
-    return http.delete<AccountResType>(`${prefix}/${id}`);
+  deleteEmployee(id: number) {
+    return http.delete<AccountResType>(`${prefix}/detail/${id}`);
   }
 }
 export const accountApiRequest = new AccountApiRequest();

@@ -18,7 +18,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { getTableLink, getVietnameseTableStatus } from "@/lib/utils";
+import {
+  getTableLink,
+  getVietnameseTableStatus,
+  handleErrorApi,
+} from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -33,6 +37,10 @@ import {
   UpdateTableBody,
   UpdateTableBodyType,
 } from "@/schemaValidations/table.schema";
+import { useEffect } from "react";
+import { useDetailTable, useUpdateTableMutation } from "@/queries/useTable";
+import { toast } from "@/hooks/use-toast";
+import QrCodeTable from "@/components/qrcode";
 
 export default function EditTable({
   id,
@@ -51,8 +59,44 @@ export default function EditTable({
       changeToken: false,
     },
   });
-  const tableNumber = 0;
+  const { data } = useDetailTable({
+    id: id!,
+    enabled: Boolean(id),
+  });
+  const updateTableMutation = useUpdateTableMutation();
 
+  useEffect(() => {
+    if (data) {
+      const { capacity, status } = data.payload.data;
+      form.reset({
+        capacity,
+        changeToken: form.getValues("changeToken"),
+        status,
+      });
+    }
+  }, [data, form]);
+  const reset = () => {
+    form.reset(), setId(undefined);
+  };
+  const onSubmit = async (values: UpdateTableBodyType) => {
+    if (updateTableMutation.isPending) return;
+    try {
+      let body = {
+        id: id as number,
+        ...values,
+      };
+      const result = await updateTableMutation.mutateAsync(body);
+      toast({
+        description: result.payload.message,
+      });
+      reset();
+    } catch (error) {
+      handleErrorApi({
+        error,
+        setError: form.setError,
+      });
+    }
+  };
   return (
     <Dialog
       open={Boolean(id)}
@@ -74,6 +118,7 @@ export default function EditTable({
         </DialogHeader>
         <Form {...form}>
           <form
+            onSubmit={form.handleSubmit(onSubmit)}
             noValidate
             className="grid auto-rows-max items-start gap-4 md:gap-8"
             id="edit-table-form"
@@ -86,8 +131,8 @@ export default function EditTable({
                     <Input
                       id="number"
                       type="number"
+                      value={data?.payload.data.number ?? 0}
                       className="w-full"
-                      value={tableNumber}
                       readOnly
                     />
                     <FormMessage />
@@ -125,6 +170,7 @@ export default function EditTable({
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -171,26 +217,35 @@ export default function EditTable({
               <FormItem>
                 <div className="grid grid-cols-4 items-center justify-items-start gap-4">
                   <Label>QR Code</Label>
-                  <div className="col-span-3 w-full space-y-2"></div>
+                  <div className="col-span-3 w-full space-y-2">
+                    {data && (
+                      <QrCodeTable
+                        token={data?.payload.data.token}
+                        tableNumber={data?.payload.data.number}
+                      ></QrCodeTable>
+                    )}
+                  </div>
                 </div>
               </FormItem>
               <FormItem>
                 <div className="grid grid-cols-4 items-center justify-items-start gap-4">
                   <Label>URL gọi món</Label>
                   <div className="col-span-3 w-full space-y-2">
-                    <Link
-                      href={getTableLink({
-                        token: "123123123",
-                        tableNumber: tableNumber,
-                      })}
-                      target="_blank"
-                      className="break-all"
-                    >
-                      {getTableLink({
-                        token: "123123123",
-                        tableNumber: tableNumber,
-                      })}
-                    </Link>
+                    {data && (
+                      <Link
+                        href={getTableLink({
+                          token: data.payload.data.token,
+                          tableNumber: data.payload.data.number,
+                        })}
+                        target="_blank"
+                        className="break-all"
+                      >
+                        {getTableLink({
+                          token: data.payload.data.token,
+                          tableNumber: data.payload.data.number,
+                        })}
+                      </Link>
+                    )}
                   </div>
                 </div>
               </FormItem>

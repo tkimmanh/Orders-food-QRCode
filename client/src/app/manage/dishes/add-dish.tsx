@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getVietnameseDishStatus } from "@/lib/utils";
+import { getVietnameseDishStatus, handleErrorApi } from "@/lib/utils";
 import { DishStatus, DishStatusValues } from "@/constants/type";
 import {
   Select,
@@ -36,11 +36,16 @@ import {
   CreateDishBody,
   CreateDishBodyType,
 } from "@/schemaValidations/dish.schema";
+import { useAddDishMutation } from "@/queries/useDishe";
+import { useUploadMediaMutation } from "@/queries/useMedia";
+import { toast } from "@/hooks/use-toast";
 
 export default function AddDish() {
   const [file, setFile] = useState<File | null>(null);
   const [open, setOpen] = useState(false);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const addDishesMutation = useAddDishMutation();
+  const uploadMediaMutation = useUploadMediaMutation();
   const form = useForm<CreateDishBodyType>({
     resolver: zodResolver(CreateDishBody),
     defaultValues: {
@@ -60,6 +65,35 @@ export default function AddDish() {
     return image;
   }, [file, image]);
 
+  const onSubmit = async (values: CreateDishBodyType) => {
+    try {
+      let body = values;
+      if (file) {
+        const formData = new FormData();
+        formData.append("image", file);
+        const uploadImageResult = await uploadMediaMutation.mutateAsync(
+          formData
+        );
+        const imageUrl = uploadImageResult.payload.data;
+        body = {
+          ...values,
+          image: imageUrl,
+        };
+      }
+      const result = await addDishesMutation.mutateAsync(body);
+      toast({
+        description: result.payload.message,
+      });
+      form.reset();
+      setFile(null);
+    } catch (error) {
+      handleErrorApi({
+        error,
+        setError: form.setError,
+      });
+    }
+  };
+
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
@@ -76,6 +110,9 @@ export default function AddDish() {
         </DialogHeader>
         <Form {...form}>
           <form
+            onSubmit={form.handleSubmit(onSubmit, (err) => {
+              console.log(err);
+            })}
             noValidate
             className="grid auto-rows-max items-start gap-4 md:gap-8"
             id="add-dish-form"

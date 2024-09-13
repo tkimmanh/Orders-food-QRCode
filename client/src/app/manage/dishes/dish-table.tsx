@@ -50,6 +50,8 @@ import AutoPagination from "@/components/auto-pagination";
 import EditDish from "@/app/manage/dishes/edit-dish";
 import AddDish from "@/app/manage/dishes/add-dish";
 import { DishListResType } from "@/schemaValidations/dish.schema";
+import { useDeleteDishMutation, useListDishes } from "@/queries/useDishe";
+import { toast } from "@/hooks/use-toast";
 
 type DishItem = DishListResType["data"][0];
 
@@ -152,6 +154,16 @@ function AlertDialogDeleteDish({
   dishDelete: DishItem | null;
   setDishDelete: (value: DishItem | null) => void;
 }) {
+  const { mutateAsync } = useDeleteDishMutation();
+  const onDelete = async () => {
+    if (dishDelete) {
+      const result = await mutateAsync(dishDelete.id);
+      setDishDelete(null);
+      toast({
+        description: result.payload.message,
+      });
+    }
+  };
   return (
     <AlertDialog
       open={Boolean(dishDelete)}
@@ -174,7 +186,7 @@ function AlertDialogDeleteDish({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={onDelete}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -188,7 +200,10 @@ export default function DishTable() {
   const pageIndex = page - 1;
   const [dishIdEdit, setDishIdEdit] = useState<number | undefined>();
   const [dishDelete, setDishDelete] = useState<DishItem | null>(null);
-  const data: any[] = [];
+  const dishListQuery = useListDishes();
+
+  const data: any[] = dishListQuery.data?.payload.data ?? [];
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -232,7 +247,13 @@ export default function DishTable() {
       value={{ dishIdEdit, setDishIdEdit, dishDelete, setDishDelete }}
     >
       <div className="w-full">
-        <EditDish id={dishIdEdit} setId={setDishIdEdit} />
+        <EditDish
+          id={dishIdEdit}
+          onSubmitSuccess={() => {
+            setDishIdEdit(undefined);
+          }}
+          setId={setDishIdEdit}
+        />
         <AlertDialogDeleteDish
           dishDelete={dishDelete}
           setDishDelete={setDishDelete}

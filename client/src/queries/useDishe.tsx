@@ -48,3 +48,16 @@ export const useUpdateDishMutation = () => {
     },
   });
 };
+
+export const useDeleteDishMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: dishesApiRequest.deleteDish,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["dishes"],
+        exact: true,
+      });
+    },
+  });
+};

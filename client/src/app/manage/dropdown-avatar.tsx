@@ -24,7 +24,7 @@ const account = {
 export default function DropdownAvatar() {
   const logoutMutation = useLogoutMutation();
   const { data } = useAccountMe();
-  const { setIsAuth } = useAppContext();
+  const { setRole } = useAppContext();
 
   const account = data?.payload.data;
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function DropdownAvatar() {
     try {
       await logoutMutation.mutateAsync();
       router.push("/");
-      setIsAuth(false);
+      setRole(undefined);
     } catch (error) {
       handleErrorApi({
         error,

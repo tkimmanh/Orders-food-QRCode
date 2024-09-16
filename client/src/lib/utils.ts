@@ -7,6 +7,7 @@ import { authApiRequest } from "@/apiRequest/auth";
 import jwt from "jsonwebtoken";
 import { DishStatus, OrderStatus, TableStatus } from "@/constants/type";
 import { envConfig } from "@/config";
+import { TokenPayload } from "@/types/jwt.types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -72,14 +73,8 @@ export const checkRefreshToken = async (param: {
 
   // chưa đăng nhập thì không hoạt động
   if (!accessToken || !refreshToken) return;
-  const decodedAccessToken = jwt.decode(accessToken) as {
-    exp: number;
-    iat: number;
-  };
-  const decodedRefreshToken = jwt.decode(refreshToken) as {
-    exp: number;
-    iat: number;
-  };
+  const decodedAccessToken = decodeToken(accessToken);
+  const decodedRefreshToken = decodeToken(refreshToken);
   /*
   Do khi lưu RefreshToken vào cookie bằng expires thì sẽ bị sai 1 vài ms ,
   khiến middleware sẽ hoạt động không đúng với yêu cầu 
@@ -172,3 +167,7 @@ export const getTableLink = ({
     envConfig.NEXT_PUBLIC_URL + "/tables/" + tableNumber + "?token=" + token
   );
 };
+
+export function decodeToken(token: string) {
+  return jwt.decode(token) as TokenPayload;
+}

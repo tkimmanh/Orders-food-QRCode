@@ -10,7 +10,7 @@ function Logout() {
   const searchParams = useSearchParams();
   const ref = useRef<any>(null);
   const router = useRouter();
-  const { setIsAuth } = useAppContext();
+  const { setRole } = useAppContext();
   const refreshTokenFormUrl = searchParams.get("refreshToken");
   const accessTokenFormUrl = searchParams.get("accessToken");
 
@@ -31,10 +31,10 @@ function Logout() {
       setTimeout(() => {
         ref.current = null;
       }, 1000);
-      setIsAuth(false);
+      setRole(undefined);
       router.push("/login");
     });
-  }, [accessTokenFormUrl, mutateAsync, refreshTokenFormUrl, router, setIsAuth]);
+  }, [accessTokenFormUrl, mutateAsync, refreshTokenFormUrl, router, setRole]);
   return null;
 }
 

@@ -1,41 +1,86 @@
 "use client";
 
 import { useAppContext } from "@/components/app-provider";
-import { getAccessTokenFormLocalStorage } from "@/lib/utils";
+import { Role } from "@/constants/type";
+import { cn, handleErrorApi } from "@/lib/utils";
+import { useLogoutMutation } from "@/queries/useAuth";
+import { RoleType } from "@/types/jwt.types";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-const menuItems = [
+const menuItems: {
+  title: string;
+  href: string;
+  role?: RoleType[] | undefined;
+  hideWhenLogin?: boolean | undefined;
+}[] = [
+  {
+    title: "Trang chủ",
+    href: "/",
+  },
   {
     title: "Món ăn",
-    href: "/menu",
+    href: "/guest/menu",
+    role: [Role.Guest],
   },
   {
     title: "Đơn hàng",
     href: "/orders",
+    role: [Role.Employee, Role.Owner],
   },
   {
     title: "Đăng nhập",
     href: "/login",
-    authRequired: false, //hiển thị khi chưa đăng nhập
+    hideWhenLogin: true,
   },
   {
     title: "Quản lý",
     href: "/manage/dashboard",
-    authRequired: true, // hiển thị khi đã đăng nhập
+    role: [Role.Owner, Role.Employee],
   },
 ];
 
 export default function NavItems({ className }: { className?: string }) {
-  const { isAuth } = useAppContext();
+  const { role, setRole } = useAppContext();
+  const logoutMutation = useLogoutMutation();
+  const router = useRouter();
 
-  return menuItems.map((item) => {
-    if ((!item.authRequired && isAuth) || (item.authRequired && !isAuth))
-      return null;
-    return (
-      <Link href={item.href} key={item.href} className={className}>
-        {item.title}
-      </Link>
-    );
-  });
+  const logout = async () => {
+    if (logoutMutation.isPending) return;
+    try {
+      await logoutMutation.mutateAsync();
+      router.push("/");
+      setRole(undefined);
+    } catch (error) {
+      handleErrorApi({
+        error,
+      });
+    }
+  };
+  return (
+    <>
+      {menuItems.map((item) => {
+        // khi đã "đăng nhập" hiển thị menu item theo role
+        const isAuth = item.role && item.role.includes(role!);
+        // đã đăng nhập hiển thị menu item và ẩn item "Đăng nhập"
+        const canShow =
+          (item.role === undefined && !item.hideWhenLogin) ||
+          (!role && item.hideWhenLogin);
+        if (isAuth || canShow) {
+          return (
+            <Link href={item.href} key={item.href} className={className}>
+              {item.title}
+            </Link>
+          );
+        } else {
+          return null;
+        }
+      })}
+      {role && (
+        <div className={cn(className, "cursor-pointer")} onClick={logout}>
+          Đăng xuất
+        </div>
+      )}
+    </>
+  );
 }

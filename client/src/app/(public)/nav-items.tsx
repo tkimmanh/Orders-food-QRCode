@@ -25,8 +25,8 @@ const menuItems: {
   },
   {
     title: "Đơn hàng",
-    href: "/orders",
-    role: [Role.Employee, Role.Owner],
+    href: "/guest/orders",
+    role: [Role.Guest],
   },
   {
     title: "Đăng nhập",

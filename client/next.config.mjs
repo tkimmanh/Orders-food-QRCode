@@ -12,6 +12,10 @@ const nextConfig = {
         hostname: "via.placeholder.com",
         pathname: "/**",
       },
+      {
+        hostname: "plus.unsplash.com",
+        pathname: "/**",
+      },
     ],
   },
 };

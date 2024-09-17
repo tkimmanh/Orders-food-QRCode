@@ -1,9 +1,20 @@
 "use client";
 
 import { useAppContext } from "@/components/app-provider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Role } from "@/constants/type";
 import { cn, handleErrorApi } from "@/lib/utils";
-import { useLogoutMutation } from "@/queries/useAuth";
+import { useGuestLogoutMutation } from "@/queries/useGuest";
 import { RoleType } from "@/types/jwt.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,7 +53,7 @@ const menuItems: {
 
 export default function NavItems({ className }: { className?: string }) {
   const { role, setRole } = useAppContext();
-  const logoutMutation = useLogoutMutation();
+  const logoutMutation = useGuestLogoutMutation();
   const router = useRouter();
 
   const logout = async () => {
@@ -52,6 +63,8 @@ export default function NavItems({ className }: { className?: string }) {
       router.push("/");
       setRole(undefined);
     } catch (error) {
+      console.log(error);
+
       handleErrorApi({
         error,
       });
@@ -77,8 +90,25 @@ export default function NavItems({ className }: { className?: string }) {
         }
       })}
       {role && (
-        <div className={cn(className, "cursor-pointer")} onClick={logout}>
-          Đăng xuất
+        <div>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <div className={cn(className, "cursor-pointer")}>Đăng xuất</div>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Bạn có chắc muốn đăng xuất?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Đăng xuất có thể sẽ khiến bạn không xem được trạng thái của
+                  món ăn đã đặt
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Hủy</AlertDialogCancel>
+                <AlertDialogAction onClick={logout}>Đồng ý</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       )}
     </>

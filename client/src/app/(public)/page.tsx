@@ -19,7 +19,7 @@ export default async function Home() {
       <div className="relative">
         <span className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></span>
         <Image
-          src="/banner.png"
+          src="https://plus.unsplash.com/premium_photo-1675103909152-4aa4efcb5598?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           width={400}
           height={200}
           quality={100}

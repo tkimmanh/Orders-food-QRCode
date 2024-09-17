@@ -9,6 +9,8 @@ import { DishStatus, OrderStatus, Role, TableStatus } from "@/constants/type";
 import { envConfig } from "@/config";
 import { TokenPayload } from "@/types/jwt.types";
 import { guestApiRequest } from "@/apiRequest/guest";
+import { format } from "date-fns";
+import { BookX, CookingPot, HandCoins, Loader, Truck } from "lucide-react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -50,12 +52,15 @@ const isBrowser = typeof window !== "undefined";
 export const getAccessTokenFormLocalStorage = () => {
   return isBrowser ? localStorage.getItem("accessToken") : null;
 };
+
 export const getRefreshTokenFormLocalStorage = () => {
   return isBrowser ? localStorage.getItem("refreshToken") : null;
 };
+
 export const setAccessTokenToLocalStorage = (accessToken: string) => {
   return isBrowser && localStorage.setItem("accessToken", accessToken);
 };
+
 export const setRefreshTokenToLocalStorage = (refreshToken: string) => {
   return isBrowser && localStorage.setItem("refreshToken", refreshToken);
 };
@@ -161,6 +166,7 @@ export const getVietnameseTableStatus = (
       return "Ẩn";
   }
 };
+
 export const getTableLink = ({
   token,
   tableNumber,
@@ -176,3 +182,37 @@ export const getTableLink = ({
 export function decodeToken(token: string) {
   return jwt.decode(token) as TokenPayload;
 }
+
+export const formatDateTimeToLocaleString = (date: string | Date) => {
+  return format(
+    date instanceof Date ? date : new Date(date),
+    "HH:mm:ss dd/MM/yyyy"
+  );
+};
+
+export const formatDateTimeToTimeString = (date: string | Date) => {
+  return format(date instanceof Date ? date : new Date(date), "HH:mm:ss");
+};
+
+export function removeAccents(str: string) {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D");
+}
+
+export const simpleMatchText = (fullText: string, matchText: string) => {
+  // vd : fullText = "Nguyễn Văn A" , matchText = "nguyen van a" hoặc "nguyen a"
+  return removeAccents(fullText.toLowerCase()).includes(
+    removeAccents(matchText.trim().toLowerCase())
+  );
+};
+
+export const OrderStatusIcon = {
+  [OrderStatus.Pending]: Loader,
+  [OrderStatus.Processing]: CookingPot,
+  [OrderStatus.Rejected]: BookX,
+  [OrderStatus.Delivered]: Truck,
+  [OrderStatus.Paid]: HandCoins,
+};

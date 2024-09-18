@@ -6,7 +6,10 @@ import { toast } from "@/hooks/use-toast";
 import socket from "@/lib/socket";
 import { formatCurrency, getVietnameseOrderStatus } from "@/lib/utils";
 import { useGuestOrderListQuery } from "@/queries/useGuest";
-import { UpdateOrderResType } from "@/schemaValidations/order.schema";
+import {
+  PayGuestOrdersResType,
+  UpdateOrderResType,
+} from "@/schemaValidations/order.schema";
 import Image from "next/image";
 import { useEffect, useMemo } from "react";
 
@@ -82,14 +85,23 @@ const OrdersCart = () => {
       refetch();
     }
 
+    function onPayment(data: PayGuestOrdersResType["data"]) {
+      const { guest } = data[0];
+      toast({
+        description: `Hóa đơn của bạn '#${guest?.name}' đã được thanh toán`,
+      });
+      refetch();
+    }
+
     socket.on("update-order", onUpdateOrder);
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-
+    socket.on("payment", onPayment);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("update-order", onUpdateOrder);
+      socket.off("payment", onPayment);
     };
   }, [refetch]);
 

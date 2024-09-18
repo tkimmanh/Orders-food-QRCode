@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false, // tắt tự động refetch khi focus vào tab
-      refetchOnMount: false, // tắt tự động refetch khi mount component
+      // refetchOnMount: false, // tắt tự động refetch khi mount component
     },
   },
 });

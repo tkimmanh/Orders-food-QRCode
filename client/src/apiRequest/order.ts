@@ -4,6 +4,7 @@ import {
   GetOrdersQueryParamsType,
   GetOrdersResType,
   UpdateOrderBodyType,
+  UpdateOrderResType,
 } from "@/schemaValidations/order.schema";
 import queryString from "query-string";
 
@@ -18,7 +19,7 @@ class OrderApiRequest {
     );
   }
   updateOrder(orderId: number, body: UpdateOrderBodyType) {
-    return http.put(`/orders/${orderId}`, body);
+    return http.put<UpdateOrderResType>(`/orders/${orderId}`, body);
   }
   getOrderDetail(orderId: number) {
     return http.get<GetOrderDetailResType>(`/orders/${orderId}`);

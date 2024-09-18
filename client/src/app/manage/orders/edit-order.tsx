@@ -23,7 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { getVietnameseOrderStatus } from "@/lib/utils";
+import { getVietnameseOrderStatus, handleErrorApi } from "@/lib/utils";
 import { OrderStatus, OrderStatusValues } from "@/constants/type";
 import {
   Select,
@@ -34,9 +34,13 @@ import {
 } from "@/components/ui/select";
 import { DishesDialog } from "@/app/manage/orders/dishes-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DishListResType } from "@/schemaValidations/dish.schema";
-import { useGetOrderDetailQuery } from "@/queries/useOrder";
+import {
+  useGetOrderDetailQuery,
+  useUpdateOrderMutation,
+} from "@/queries/useOrder";
+import { toast } from "@/hooks/use-toast";
 
 const fakeOrderDetail = {
   id: 30,
@@ -90,9 +94,10 @@ export default function EditOrder({
     orderId: id as number,
     enabled: Boolean(id),
   });
-  const [selectedDish, setSelectedDish] = useState<DishListResType["data"][0]>(
-    orderDetailQuery.data?.payload.data.dishSnapshot as any
-  );
+  const updateOrderMutation = useUpdateOrderMutation();
+  const [selectedDish, setSelectedDish] = useState<
+    DishListResType["data"][0] | null
+  >(null);
   const orderDetail = orderDetailQuery.data?.payload.data;
   const form = useForm<UpdateOrderBodyType>({
     resolver: zodResolver(UpdateOrderBody),
@@ -103,10 +108,40 @@ export default function EditOrder({
     },
   });
 
-  const onSubmit = async (values: UpdateOrderBodyType) => {};
+  useEffect(() => {
+    if (orderDetail) {
+      form.reset({
+        status: orderDetail.status,
+        dishId: orderDetail.dishSnapshot.dishId ?? 0,
+        quantity: orderDetail.quantity,
+      });
+      setSelectedDish(orderDetail.dishSnapshot);
+    }
+  }, [form, orderDetail]);
 
   const reset = () => {
     setId(undefined);
+  };
+
+  const onSubmit = async (values: UpdateOrderBodyType) => {
+    if (updateOrderMutation.isPending) return;
+    try {
+      let body: UpdateOrderBodyType & { orderId: number } = {
+        orderId: id as number,
+        ...values,
+      };
+      const result = await updateOrderMutation.mutateAsync(body);
+      toast({
+        description: result.payload.message,
+      });
+      onSubmitSuccess && onSubmitSuccess();
+      reset();
+    } catch (error) {
+      handleErrorApi({
+        error,
+        setError: form.setError,
+      });
+    }
   };
 
   return (

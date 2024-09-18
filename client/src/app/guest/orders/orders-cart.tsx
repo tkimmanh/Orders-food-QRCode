@@ -28,12 +28,12 @@ const OrdersCart = () => {
     function onDisconnect() {
       console.log("socket disconnect");
     }
-    function onUpdateOrder(data: UpdateOrderResType) {
+    function onUpdateOrder(data: UpdateOrderResType["data"]) {
       const {
         dishSnapshot: { name },
         status,
         quantity,
-      } = data.data;
+      } = data;
       toast({
         title: "Thông báo",
         description: `Món ${name} (SL: ${quantity} ) đã được cập nhật thành ${getVietnameseOrderStatus(

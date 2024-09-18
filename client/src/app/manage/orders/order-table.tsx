@@ -51,7 +51,10 @@ import {
 } from "@/components/ui/popover";
 import { endOfDay, format, startOfDay } from "date-fns";
 import TableSkeleton from "@/app/manage/orders/table-skeleton";
-import { useOrderListOwnerQuery } from "@/queries/useOrder";
+import {
+  useOrderListOwnerQuery,
+  useUpdateOrderMutation,
+} from "@/queries/useOrder";
 import { useListTable } from "@/queries/useTable";
 import socket from "@/lib/socket";
 import { toast } from "@/hooks/use-toast";
@@ -105,6 +108,8 @@ export default function OrderTable() {
   const tableListSortedByNumber = tableList.sort(
     (a: any, b: any) => a.number - b.number
   );
+
+  const updateOrderMutation = useUpdateOrderMutation();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -122,7 +127,15 @@ export default function OrderTable() {
     dishId: number;
     status: (typeof OrderStatusValues)[number];
     quantity: number;
-  }) => {};
+  }) => {
+    try {
+      await updateOrderMutation.mutateAsync(body);
+    } catch (error) {
+      handleErrorApi({
+        error,
+      });
+    }
+  };
 
   const table = useReactTable({
     data: orderList,
@@ -177,12 +190,12 @@ export default function OrderTable() {
       }
     }
 
-    function onUpdateOrder(data: UpdateOrderResType) {
+    function onUpdateOrder(data: UpdateOrderResType["data"]) {
       const {
         dishSnapshot: { name },
         status,
         quantity,
-      } = data.data;
+      } = data;
       toast({
         title: "Thông báo",
         description: `Món ${name} (SL: ${quantity} ) đã được cập nhật thành ${getVietnameseOrderStatus(

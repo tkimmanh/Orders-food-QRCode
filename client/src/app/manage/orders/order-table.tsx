@@ -50,6 +50,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { endOfDay, format, startOfDay } from "date-fns";
+import TableSkeleton from "@/app/manage/orders/table-skeleton";
+import { useOrderListOwnerQuery } from "@/queries/useOrder";
+import { useListTable } from "@/queries/useTable";
 
 export const OrderTableContext = createContext({
   setOrderIdEdit: (value: number | undefined) => {},
@@ -85,8 +88,16 @@ export default function OrderTable() {
   const page = searchParam.get("page") ? Number(searchParam.get("page")) : 1;
   const pageIndex = page - 1;
   const [orderIdEdit, setOrderIdEdit] = useState<number | undefined>();
-  const orderList: any = [];
-  const tableList: any = [];
+  const orderListQuery = useOrderListOwnerQuery({
+    fromDate,
+    toDate,
+  });
+
+  const orderList = orderListQuery.data?.payload.data ?? [];
+
+  const tableListQuery = useListTable();
+  const tableList = tableListQuery.data?.payload.data ?? [];
+
   const tableListSortedByNumber = tableList.sort(
     (a: any, b: any) => a.number - b.number
   );

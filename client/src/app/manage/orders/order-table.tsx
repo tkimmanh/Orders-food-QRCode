@@ -53,6 +53,9 @@ import { endOfDay, format, startOfDay } from "date-fns";
 import TableSkeleton from "@/app/manage/orders/table-skeleton";
 import { useOrderListOwnerQuery } from "@/queries/useOrder";
 import { useListTable } from "@/queries/useTable";
+import socket from "@/lib/socket";
+import { toast } from "@/hooks/use-toast";
+import { GuestCreateOrdersResType } from "@/schemaValidations/guest.schema";
 
 export const OrderTableContext = createContext({
   setOrderIdEdit: (value: number | undefined) => {},
@@ -93,6 +96,7 @@ export default function OrderTable() {
     toDate,
   });
 
+  const refetchOrderList = orderListQuery.refetch;
   const orderList = orderListQuery.data?.payload.data ?? [];
 
   const tableListQuery = useListTable();
@@ -153,6 +157,62 @@ export default function OrderTable() {
     setFromDate(initFromDate);
     setToDate(initToDate);
   };
+
+  useEffect(() => {
+    if (socket.connected) {
+      onDisconnect();
+    }
+    function onConnect() {
+      console.log(socket.id);
+    }
+    function onDisconnect() {
+      console.log("socket disconnect");
+    }
+
+    function refetch() {
+      const now = new Date();
+      // thời điểm hiện tại nằm trong khoảng thời gian filter thì refetch , tránh reftch khi thời gian filter đã qua
+      if (now >= fromDate && now <= toDate) {
+        refetchOrderList();
+      }
+    }
+
+    function onUpdateOrder(data: UpdateOrderResType) {
+      const {
+        dishSnapshot: { name },
+        status,
+        quantity,
+      } = data.data;
+      toast({
+        title: "Thông báo",
+        description: `Món ${name} (SL: ${quantity} ) đã được cập nhật thành ${getVietnameseOrderStatus(
+          status
+        )}`,
+      });
+      refetch();
+    }
+
+    function onNewOrder(data: GuestCreateOrdersResType["data"]) {
+      const { guest } = data[0];
+      toast({
+        title: "Thông báo",
+        description: `Có yêu một yêu cầu mới từ ${guest?.name}`,
+      });
+      refetch();
+    }
+    // socket.on('event', callback)
+    socket.on("update-order", onUpdateOrder);
+    socket.on("new-order", onNewOrder);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("update-order", onUpdateOrder);
+      socket.off("new-order", onNewOrder);
+    };
+  }, [fromDate, refetchOrderList, toDate]);
 
   return (
     <OrderTableContext.Provider

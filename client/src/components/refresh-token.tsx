@@ -24,9 +24,9 @@ const RefreshToken = () => {
     };
     // check refresh token khi mới vào trang
     onRefreshToken();
-    const TIMEOUT = 1000;
+    const TIMEOUT = 10 * 1000;
     // Timeout interval phải bé hơn thời gian hết hạn của accessToken
-    // VD: thời gian hết hạn accessToken là 10s thì 1s mình sẽ cho check 1 lần
+    // VD: thời gian hết hạn accessToken là 10s thì timeout là 1s ,
     interval = setInterval(onRefreshToken, TIMEOUT);
 
     if (socket.connected) {

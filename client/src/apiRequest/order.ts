@@ -1,5 +1,7 @@
 import http from "@/lib/http";
 import {
+  CreateOrdersBodyType,
+  CreateOrdersResType,
   GetOrderDetailResType,
   GetOrdersQueryParamsType,
   GetOrdersResType,
@@ -19,6 +21,9 @@ class OrderApiRequest {
           toDate: queryParams.toDate?.toISOString(),
         })
     );
+  }
+  createOrder(body: CreateOrdersBodyType) {
+    return http.post<CreateOrdersResType>("/orders", body);
   }
   updateOrder(orderId: number, body: UpdateOrderBodyType) {
     return http.put<UpdateOrderResType>(`/orders/${orderId}`, body);

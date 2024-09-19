@@ -214,8 +214,14 @@ export function TablesDialog({
               <div>
                 <AutoPagination
                   page={table.getState().pagination.pageIndex + 1}
+                  isLink={false}
                   pageSize={table.getPageCount()}
-                  pathname="/manage/Tables"
+                  onClick={(pageNumber) =>
+                    table.setPagination({
+                      pageIndex: pageNumber - 1,
+                      pageSize: PAGE_SIZE,
+                    })
+                  }
                 />
               </div>
             </div>

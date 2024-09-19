@@ -73,6 +73,7 @@ export const removeTokenFromLocalStorage = () => {
 export const checkRefreshToken = async (param: {
   onSuccess?: () => void;
   onError?: () => void;
+  force?: boolean;
 }) => {
   const accessToken = getAccessTokenFormLocalStorage();
   const refreshToken = getRefreshTokenFormLocalStorage();
@@ -99,8 +100,9 @@ export const checkRefreshToken = async (param: {
   }
   // nếu thời gian của accessToken còn 1/3 thì sẽ cho check refresh token
   if (
+    param?.force ||
     decodedAccessToken.exp - now <
-    (decodedAccessToken.exp - decodedAccessToken.iat) / 3
+      (decodedAccessToken.exp - decodedAccessToken.iat) / 3
   ) {
     try {
       const role = decodedRefreshToken.role;

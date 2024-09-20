@@ -28,8 +28,7 @@ export async function POST() {
 
     return Response.json(result.payload);
   } catch (error) {
-    console.log(error);
-    Response.json(
+    return Response.json(
       {
         message: "Đã có lỗi xảy ra",
       },

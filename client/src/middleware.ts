@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { Role } from "./constants/type";
-import { decodeToken } from "./lib/utils";
+import { TokenPayload } from "./types/jwt.types";
+import jwt from "jsonwebtoken";
+
+function decodeToken(token: string) {
+  return jwt.decode(token) as TokenPayload;
+}
 
 const mangePaths = ["/manage"];
 const guestPaths = ["/guest"];
@@ -23,7 +28,6 @@ export function middleware(request: NextRequest) {
 
   //2. Đã đăng nhập
   if (refreshToken) {
-    
     // 2.1 Đã đăng nhập không vào được các trang trong "unAuthPaths"
     if (unAuthPaths.some((path) => pathname.startsWith(path)) && refreshToken) {
       return NextResponse.redirect(new URL("/", request.url));

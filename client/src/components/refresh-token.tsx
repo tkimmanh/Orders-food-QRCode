@@ -3,13 +3,15 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { checkRefreshToken } from "@/lib/utils";
-import socket from "@/lib/socket";
+import { useAppContext } from "./app-provider";
 
 // page không check refresh token;
 const UNAUTHENTICATED_PATH = ["/login", "/logout", "refresh-token"];
 const RefreshToken = () => {
   const pathname = usePathname();
+
   const router = useRouter();
+  const { disconnectSocket, socket } = useAppContext();
   useEffect(() => {
     if (UNAUTHENTICATED_PATH.includes(pathname)) return;
     let interval: any = null;
@@ -17,6 +19,7 @@ const RefreshToken = () => {
       checkRefreshToken({
         onError: () => {
           clearInterval(interval);
+          disconnectSocket();
           router.push("/login");
         },
         force,
@@ -29,12 +32,12 @@ const RefreshToken = () => {
     // VD: thời gian hết hạn accessToken là 10s thì timeout là 1s ,
     interval = setInterval(onRefreshToken, TIMEOUT);
 
-    if (socket.connected) {
+    if (socket?.connected) {
       onConnect();
     }
 
     function onConnect() {
-      console.log(socket.id);
+      console.log(socket?.id);
     }
 
     function onDisconnect() {
@@ -46,16 +49,16 @@ const RefreshToken = () => {
     }
     // check refresh token khi socket bị disconnect
     onRefreshToken();
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("refresh-token", onRefreshTokenSocket);
+    socket?.on("connect", onConnect);
+    socket?.on("disconnect", onDisconnect);
+    socket?.on("refresh-token", onRefreshTokenSocket);
     return () => {
       clearInterval(interval);
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("refresh-token", onRefreshTokenSocket);
+      socket?.off("connect", onConnect);
+      socket?.off("disconnect", onDisconnect);
+      socket?.off("refresh-token", onRefreshTokenSocket);
     };
-  }, [pathname, router]);
+  }, [disconnectSocket, pathname, router, socket]);
   return null;
 };
 

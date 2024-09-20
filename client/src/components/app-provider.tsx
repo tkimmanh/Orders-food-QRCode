@@ -6,18 +6,20 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import RefreshToken from "./refresh-token";
 import {
   decodeToken,
+  generateSocketInstance,
   getAccessTokenFormLocalStorage,
   removeTokenFromLocalStorage,
 } from "@/lib/utils";
 
 import { RoleType } from "@/types/jwt.types";
-
+import type { Socket } from "socket.io-client";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -31,6 +33,9 @@ const AppContext = createContext({
   isAuth: false,
   role: undefined as RoleType | undefined,
   setRole: (role?: RoleType | undefined) => {},
+  socket: undefined as Socket | undefined,
+  setSocket: (socket?: Socket | undefined) => {},
+  disconnectSocket: () => {},
 });
 
 export const useAppContext = () => {
@@ -39,12 +44,17 @@ export const useAppContext = () => {
 
 export default function AppProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<RoleType | undefined>(undefined);
-
+  const [socket, setSocket] = useState<Socket | undefined>(undefined);
+  const count = useRef(0);
   useEffect(() => {
-    const accessToken = getAccessTokenFormLocalStorage();
-    if (accessToken) {
-      const role = decodeToken(accessToken).role;
-      setRoleState(role);
+    if (count.current === 0) {
+      const accessToken = getAccessTokenFormLocalStorage();
+      if (accessToken) {
+        const role = decodeToken(accessToken).role;
+        setRoleState(role);
+        setSocket(generateSocketInstance(accessToken));
+      }
+      count.current += 1;
     }
   }, []);
 
@@ -54,10 +64,21 @@ export default function AppProvider({ children }: { children: ReactNode }) {
       removeTokenFromLocalStorage();
     }
   }, []);
+
+  const disconnectSocket = useCallback(() => {
+    if (socket) {
+      socket.disconnect();
+      setSocket(undefined);
+    }
+  }, [socket, setSocket]);
+
   const isAuth = Boolean(role);
   return (
     <AppContext.Provider
       value={{
+        disconnectSocket,
+        socket,
+        setSocket,
         isAuth,
         role,
         setRole,

@@ -1,9 +1,9 @@
 "use client";
 
+import { useAppContext } from "@/components/app-provider";
 import { Badge } from "@/components/ui/badge";
 import { OrderStatus } from "@/constants/type";
 import { toast } from "@/hooks/use-toast";
-import socket from "@/lib/socket";
 import { formatCurrency, getVietnameseOrderStatus } from "@/lib/utils";
 import { useGuestOrderListQuery } from "@/queries/useGuest";
 import {
@@ -15,6 +15,7 @@ import { useEffect, useMemo } from "react";
 
 const OrdersCart = () => {
   const { data, refetch } = useGuestOrderListQuery();
+  const { socket } = useAppContext();
   const orders = useMemo(() => data?.payload.data || [], [data]);
   const { watingForPlaying, paid } = useMemo(() => {
     return orders.reduce(
@@ -61,11 +62,13 @@ const OrdersCart = () => {
   }, [orders]);
 
   useEffect(() => {
-    if (socket.connected) {
+    if (!socket) return;
+    
+    if (socket?.connected) {
       onDisconnect();
     }
     function onConnect() {
-      console.log(socket.id);
+      console.log(socket?.id);
     }
     function onDisconnect() {
       console.log("socket disconnect");
@@ -103,7 +106,7 @@ const OrdersCart = () => {
       socket.off("update-order", onUpdateOrder);
       socket.off("payment", onPayment);
     };
-  }, [refetch]);
+  }, [refetch, socket]);
 
   return (
     <div className="w-full max-w-[600px] ">

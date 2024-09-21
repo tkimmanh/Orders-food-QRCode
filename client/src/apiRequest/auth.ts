@@ -70,6 +70,11 @@ class AuthApiRequest {
     this.refreshTokenRequest = null;
     return result;
   }
+  async setTokenToCookie(body: { accessToken: string; refreshToken: string }) {
+    return http.post("/api/auth/token", body, {
+      baseUrl: "",
+    });
+  }
 }
 
 export const authApiRequest = new AuthApiRequest();

@@ -1,5 +1,5 @@
 "use client";
-import { useAppContext } from "@/components/app-provider";
+import { useAppStore } from "@/components/app-provider";
 import { getRefreshTokenFormLocalStorage } from "@/lib/utils";
 import { useLogoutMutation } from "@/queries/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -10,7 +10,7 @@ function Logout() {
   const searchParams = useSearchParams();
   const ref = useRef<any>(null);
   const router = useRouter();
-  const { setRole, setSocket, socket } = useAppContext();
+  const { setRole, setSocket, socket } = useAppStore((state) => state);
   const refreshTokenFormUrl = searchParams.get("refreshToken");
   const accessTokenFormUrl = searchParams.get("accessToken");
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppContext } from "@/components/app-provider";
+import { useAppStore } from "@/components/app-provider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -52,7 +52,7 @@ const menuItems: {
 ];
 
 export default function NavItems({ className }: { className?: string }) {
-  const { role, setRole, disconnectSocket } = useAppContext();
+  const { role, setRole, disconnectSocket } = useAppStore((state) => state);
   const logoutMutation = useGuestLogoutMutation();
   const router = useRouter();
 

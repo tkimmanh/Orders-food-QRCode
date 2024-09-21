@@ -13,15 +13,15 @@ import {
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useGuestLoginMutation } from "@/queries/useGuest";
-import { useAppContext } from "@/components/app-provider";
 import { generateSocketInstance, handleErrorApi } from "@/lib/utils";
+import { useAppStore } from "@/components/app-provider";
 
 export default function GuestLoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const params = useParams();
   const guestLoginMutation = useGuestLoginMutation();
-  const { setRole, setSocket } = useAppContext();
+  const { setRole, setSocket } = useAppStore((state) => state);
   const tableNumber = Number(params.number);
   const token = searchParams.get("token");
   const form = useForm<GuestLoginBodyType>({

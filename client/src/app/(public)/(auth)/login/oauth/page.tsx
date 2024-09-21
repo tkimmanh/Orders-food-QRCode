@@ -1,5 +1,5 @@
 "use client";
-import { useAppContext } from "@/components/app-provider";
+import { useAppStore } from "@/components/app-provider";
 import { toast } from "@/hooks/use-toast";
 import { decodeToken, generateSocketInstance } from "@/lib/utils";
 import { useSetTokenToCookieMutation } from "@/queries/useAuth";
@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 
 const OAuthPage = () => {
-  const { setSocket, setRole } = useAppContext();
+  const { setSocket, setRole } = useAppStore();
   const { mutateAsync } = useSetTokenToCookieMutation();
   const searchParams = useSearchParams();
   const ref = useRef(0);

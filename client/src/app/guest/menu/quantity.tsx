@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Minus, Plus } from "lucide-react";
 import React from "react";
-import { number } from "zod";
 
 const Quantity = ({
   onChange,

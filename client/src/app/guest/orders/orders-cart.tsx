@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppContext } from "@/components/app-provider";
+import { useAppStore } from "@/components/app-provider";
 import { Badge } from "@/components/ui/badge";
 import { OrderStatus } from "@/constants/type";
 import { toast } from "@/hooks/use-toast";
@@ -15,7 +15,7 @@ import { useEffect, useMemo } from "react";
 
 const OrdersCart = () => {
   const { data, refetch } = useGuestOrderListQuery();
-  const { socket } = useAppContext();
+  const { socket } = useAppStore((state) => state);
   const orders = useMemo(() => data?.payload.data || [], [data]);
   const { watingForPlaying, paid } = useMemo(() => {
     return orders.reduce(
@@ -63,7 +63,7 @@ const OrdersCart = () => {
 
   useEffect(() => {
     if (!socket) return;
-    
+
     if (socket?.connected) {
       onDisconnect();
     }

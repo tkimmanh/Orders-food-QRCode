@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { checkRefreshToken } from "@/lib/utils";
-import { useAppContext } from "./app-provider";
+import { useAppStore } from "./app-provider";
 
 // page không check refresh token;
 const UNAUTHENTICATED_PATH = ["/login", "/logout", "refresh-token"];
@@ -11,7 +11,7 @@ const RefreshToken = () => {
   const pathname = usePathname();
 
   const router = useRouter();
-  const { disconnectSocket, socket } = useAppContext();
+  const { disconnectSocket, socket } = useAppStore((state) => state);
   useEffect(() => {
     if (UNAUTHENTICATED_PATH.includes(pathname)) return;
     let interval: any = null;

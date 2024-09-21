@@ -58,7 +58,7 @@ import {
 import { useListTable } from "@/queries/useTable";
 import { toast } from "@/hooks/use-toast";
 import { GuestCreateOrdersResType } from "@/schemaValidations/guest.schema";
-import { useAppContext } from "@/components/app-provider";
+import { useAppStore } from "@/components/app-provider";
 
 export const OrderTableContext = createContext({
   setOrderIdEdit: (value: number | undefined) => {},
@@ -121,7 +121,7 @@ export default function OrderTable() {
 
   const { statics, orderObjectByGuestId, servingGuestByTableNumber } =
     useOrderService(orderList);
-  const { socket } = useAppContext();
+  const { socket } = useAppStore((state) => state);
   const changeStatus = async (body: {
     orderId: number;
     dishId: number;
@@ -173,7 +173,7 @@ export default function OrderTable() {
 
   useEffect(() => {
     if (!socket) return;
-    
+
     if (socket?.connected) {
       onDisconnect();
     }

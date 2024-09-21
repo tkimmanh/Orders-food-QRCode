@@ -1,10 +1,10 @@
 "use client";
-import { useAppContext } from "@/components/app-provider";
 import { handleErrorApi } from "@/lib/utils";
 import { useLogoutMutation } from "@/queries/useAuth";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useAppStore } from "./app-provider";
 
 const UNAUTHENTICATED_PATH = ["/login", "/logout", "/refresh-token"];
 
@@ -12,7 +12,7 @@ export default function ListenLogoutSocket() {
   const pathname = usePathname();
   const router = useRouter();
   const { isPending, mutateAsync } = useLogoutMutation();
-  const { setRole, socket, disconnectSocket } = useAppContext();
+  const { setRole, socket, disconnectSocket } = useAppStore((state) => state);
   useEffect(() => {
     // nếu đang ở trang không cần xác thực thì không cần lắng nghe sự kiện logout
     if (UNAUTHENTICATED_PATH.includes(pathname)) return;

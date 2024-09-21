@@ -227,3 +227,16 @@ export const generateSocketInstance = (accessToken: string) => {
     },
   });
 };
+
+export const wrapServerApi = async <T>(fn: () => Promise<T>) => {
+  let result = null;
+  try {
+    result = await fn();
+  } catch (error: any) {
+    if (error?.digest?.includes("NEXT_REDIRECT")) {
+      // nếu là các lỗi liên quan đến redirect thì throw ra để có thể redirect
+      throw error;
+    }
+  }
+  return result;
+};

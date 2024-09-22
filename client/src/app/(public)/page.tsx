@@ -1,6 +1,7 @@
 import { dishesApiRequest } from "@/apiRequest/dishe";
 import { formatCurrency } from "@/lib/utils";
 import { DishListResType } from "@/schemaValidations/dish.schema";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,6 +16,8 @@ export default async function Home() {
   } catch (error) {
     return <div>Something went wrong</div>;
   }
+  // với async function sử dụng i18n thì sử dụng phương thức getTranslations() để lấy dữ liệu ngôn ngữ
+  const t = await getTranslations("HomePage");
   return (
     <div className="w-full space-y-4">
       <div className="relative">
@@ -29,7 +32,7 @@ export default async function Home() {
         />
         <div className="z-20 relative py-10 md:py-20 px-4 sm:px-10 md:px-20">
           <h1 className="text-center text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold">
-            Nhà hàng Big Boy
+            Nhà hàng {t("title")}
           </h1>
           <p className="text-center text-sm sm:text-base mt-4">
             Vị ngon, trọn khoảnh khắc

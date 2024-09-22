@@ -19,4 +19,9 @@ if (!configProject.success) {
   throw new Error("Khai báo môi trường không hợp lệ");
 }
 
+export type Locale = (typeof locales)[number];
+
+export const locales = ["en", "vi"] as const;
+export const defaultLocale: Locale = "en";
+
 export const envConfig = configProject.data;

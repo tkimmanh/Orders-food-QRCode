@@ -1,8 +1,8 @@
 import { dishesApiRequest } from "@/apiRequest/dishe";
-import { formatCurrency, wrapServerApi } from "@/lib/utils";
-import Image from "next/image";
+import { wrapServerApi } from "@/lib/utils";
 import React from "react";
-import DishesDetail from "./dishe-detail";
+import ModalDishDetail from "./modal";
+import DishesDetail from "@/app/(public)/dishes/[id]/dishe-detail";
 
 const DishesPage = async ({ params: { id } }: { params: { id: string } }) => {
   const data = await wrapServerApi(() => dishesApiRequest.getDish(Number(id)));
@@ -10,7 +10,11 @@ const DishesPage = async ({ params: { id } }: { params: { id: string } }) => {
   if (!dish) {
     return <div>Không tìm thấy món ăn</div>;
   }
-  return <DishesDetail dish={dish}></DishesDetail>;
+  return (
+    <ModalDishDetail>
+      <DishesDetail dish={dish}></DishesDetail>
+    </ModalDishDetail>
+  );
 };
 
 export default DishesPage;

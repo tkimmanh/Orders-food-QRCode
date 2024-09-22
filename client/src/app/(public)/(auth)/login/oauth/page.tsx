@@ -4,9 +4,9 @@ import { toast } from "@/hooks/use-toast";
 import { decodeToken, generateSocketInstance } from "@/lib/utils";
 import { useSetTokenToCookieMutation } from "@/queries/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 
-const OAuthPage = () => {
+function OAuth() {
   const { setSocket, setRole } = useAppStore();
   const { mutateAsync } = useSetTokenToCookieMutation();
   const searchParams = useSearchParams();
@@ -56,6 +56,14 @@ const OAuthPage = () => {
   }, [accessToken, refreshToken, setSocket, setRole]);
 
   return null;
+}
+
+const OAuthPage = () => {
+  return (
+    <Suspense>
+      <OAuth />
+    </Suspense>
+  );
 };
 
 export default OAuthPage;

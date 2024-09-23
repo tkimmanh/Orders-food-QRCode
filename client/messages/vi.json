@@ -1,7 +1,22 @@
 {
   "HomePage": {
-    "title": "Chào thế giới!"
+    "title": "Quét QR - Gọi món",
+    "subtitle": "Quét mã QR trên bàn của bạn",
+    "words": ["Gọi món nhanh chóng", "Dễ dàng", "Tiện lợi"],
+    "list": "Danh sách món",
+    "description": "Chỉ cần quét mã QR trên bàn, khám phá thực đơn phong phú của chúng tôi, gọi món yêu thích trong vài giây và thưởng thức bữa ăn mà không phải chờ đợi lâu."
   },
+  "Nav": {
+    "home": "Trang chủ",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "Manage": "Quản lý",
+    "Dishes": "Món ăn",
+    "Orders": "Đơn hàng",
+    "yes": "Đồng ý",
+    "no": "Không"
+  },
+
   "LoginPage": {
     "title": "Đăng nhập"
   },

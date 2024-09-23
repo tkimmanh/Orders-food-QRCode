@@ -1,7 +1,22 @@
 {
   "HomePage": {
-    "title": "Hello world!"
+    "title": "Scan QR - Order food",
+    "subtitle": "Scan the QR code on your table",
+    "words": ["Quick order", "Easy", "Convenient"],
+    "list": "Dish list",
+    "description": "Simply scan the QR code on the table, explore our extensive menu, order your favorites in seconds and enjoy your meal without a long wait."
   },
+  "Nav": {
+    "home": "Home",
+    "login": "Login",
+    "logout": "Logout",
+    "Manage": "Manage",
+    "Dishes": "Dishes",
+    "Orders": "Orders",
+    "yes": "Yes",
+    "no": "No"
+  },
+
   "LoginPage": {
     "title": "Login"
   },

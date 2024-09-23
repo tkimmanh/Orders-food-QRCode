@@ -241,6 +241,7 @@ export default function EditTable({
                         className="break-all"
                       >
                         {getTableLink({
+                          locale: "vi",
                           token: data.payload.data.token,
                           tableNumber: data.payload.data.number,
                         })}

@@ -173,12 +173,14 @@ export const getVietnameseTableStatus = (
 export const getTableLink = ({
   token,
   tableNumber,
+  locale = "vi",
 }: {
   token: string;
   tableNumber: number;
+  locale?: string
 }) => {
   return (
-    envConfig.NEXT_PUBLIC_URL + "/tables/" + tableNumber + "?token=" + token
+    envConfig.NEXT_PUBLIC_URL + `/${locale}/` + `tables/` + tableNumber + "?token=" + token
   );
 };
 

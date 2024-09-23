@@ -39,6 +39,7 @@ import {
 import { useAddDishMutation } from "@/queries/useDishe";
 import { useUploadMediaMutation } from "@/queries/useMedia";
 import { toast } from "@/hooks/use-toast";
+import { revalidateApiRequest } from "@/apiRequest/revalidate";
 
 export default function AddDish() {
   const [file, setFile] = useState<File | null>(null);
@@ -81,6 +82,7 @@ export default function AddDish() {
         };
       }
       const result = await addDishesMutation.mutateAsync(body);
+      await revalidateApiRequest.revalidate("dishes-tag");
       toast({
         description: result.payload.message,
       });

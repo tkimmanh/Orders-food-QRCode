@@ -18,40 +18,42 @@ import { Link } from "@/navigation";
 import { useGuestLogoutMutation } from "@/queries/useGuest";
 import { RoleType } from "@/types/jwt.types";
 import { useRouter } from "@/navigation";
-
-const menuItems: {
-  title: string;
-  href: string;
-  role?: RoleType[] | undefined;
-  hideWhenLogin?: boolean | undefined;
-}[] = [
-  {
-    title: "Trang chủ",
-    href: "/",
-  },
-  {
-    title: "Món ăn",
-    href: "/guest/menu",
-    role: [Role.Guest],
-  },
-  {
-    title: "Đơn hàng",
-    href: "/guest/orders",
-    role: [Role.Guest],
-  },
-  {
-    title: "Đăng nhập",
-    href: "/login",
-    hideWhenLogin: true,
-  },
-  {
-    title: "Quản lý",
-    href: "/manage/dashboard",
-    role: [Role.Owner, Role.Employee],
-  },
-];
+import { useTranslations } from "next-intl";
 
 export default function NavItems({ className }: { className?: string }) {
+  const t = useTranslations("Nav");
+  const menuItems: {
+    title: string;
+    href: string;
+    role?: RoleType[] | undefined;
+    hideWhenLogin?: boolean | undefined;
+  }[] = [
+    {
+      title: t("home"),
+      href: "/",
+    },
+    {
+      title: t("Dishes"),
+      href: "/guest/menu",
+      role: [Role.Guest],
+    },
+    {
+      title: t("Orders"),
+      href: "/guest/orders",
+      role: [Role.Guest],
+    },
+    {
+      title: t("login"),
+      href: "/login",
+      hideWhenLogin: true,
+    },
+    {
+      title: t("Manage"),
+      href: "/manage/dashboard",
+      role: [Role.Owner, Role.Employee],
+    },
+  ];
+
   const { role, setRole, disconnectSocket } = useAppStore((state) => state);
   const logoutMutation = useGuestLogoutMutation();
   const router = useRouter();
@@ -92,7 +94,9 @@ export default function NavItems({ className }: { className?: string }) {
         <div>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <div className={cn(className, "cursor-pointer")}>Đăng xuất</div>
+              <div className={cn(className, "cursor-pointer")}>
+                {t("logout")}
+              </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -103,8 +107,10 @@ export default function NavItems({ className }: { className?: string }) {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Hủy</AlertDialogCancel>
-                <AlertDialogAction onClick={logout}>Đồng ý</AlertDialogAction>
+                <AlertDialogCancel>{t("no")}</AlertDialogCancel>
+                <AlertDialogAction onClick={logout}>
+                  {t("yes")}
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

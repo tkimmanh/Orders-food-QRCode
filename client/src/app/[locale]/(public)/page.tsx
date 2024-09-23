@@ -1,9 +1,12 @@
 import { dishesApiRequest } from "@/apiRequest/dishe";
-import { formatCurrency } from "@/lib/utils";
+import CardHome from "@/components/blocks/card-home";
+import ButtonBorder from "@/components/button-border";
+import { BackgroundBeams } from "@/components/ui/background-beams";
+import { Button } from "@/components/ui/button";
+import { FlipWords } from "@/components/ui/flip-words";
 import { Link } from "@/navigation";
 import { DishListResType } from "@/schemaValidations/dish.schema";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
-import Image from "next/image";
 
 export default async function Home({
   params: { locale },
@@ -23,56 +26,41 @@ export default async function Home({
   unstable_setRequestLocale(locale);
   // với async function sử dụng i18n thì sử dụng phương thức getTranslations() để lấy dữ liệu ngôn ngữ
   const t = await getTranslations("HomePage");
-
+  const words = ["Quick order", "Easy", "Convenient"];
   return (
-    <div className="w-full space-y-4">
-      <div className="relative">
-        <span className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></span>
-        <Image
-          src="https://plus.unsplash.com/premium_photo-1675103909152-4aa4efcb5598?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          width={400}
-          height={200}
-          quality={100}
-          alt="Banner"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-        />
-        <div className="z-20 relative py-10 md:py-20 px-4 sm:px-10 md:px-20">
-          <h1 className="text-center text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold">
-            Nhà hàng {t("title")}
-          </h1>
-          <p className="text-center text-sm sm:text-base mt-4">
-            Vị ngon, trọn khoảnh khắc
-          </p>
+    <div className="w-full space-y-6">
+      <div className="flex items-center h-full lg:min-h-[500px] min-h-[300px] justify-center flex-col gap-y-4 relative ">
+        <p className="font-extrabold text-transparent text-3xl md:text-4xl lg:text-6xl bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+          {t("title")}
+        </p>
+        <div className="lg:text-5xl md:text-3xl text-2xl font-extrabold">
+          <FlipWords words={words} />
         </div>
+        <p className="w-full max-w-[800px] text-center lg:text-base text-sm italic text-slate-400">
+          {t("description")}
+        </p>
+        <div className="flex lg:flex-row items-center justify-center flex-col gap-5">
+          <ButtonBorder>{t("subtitle")}</ButtonBorder>
+          <Button className="button-scroll">{t("list")}</Button>
+        </div>
+        <BackgroundBeams />
       </div>
-      <section className="space-y-10 py-16">
-        <h2 className="text-center text-2xl font-bold">Đa dạng các món ăn</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+      <div className="border-b w-full pb-4"></div>
+      <div className="py-10 w-ful">
+        <h1 className="lg:text-3xl text-2xl font-medium mb-10">{t("list")}</h1>
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 w-full gap-3">
           {dishesList.map((dish) => (
-            <Link
-              href={`/dishes/${dish.id}`}
-              className="flex gap-4 w"
-              key={dish.id}
-            >
-              <div className="flex-shrink-0">
-                <Image
-                  src={dish.image}
-                  width={150}
-                  height={150}
-                  quality={100}
-                  alt={dish.name}
-                  className="object-cover w-[150px] h-[150px] rounded-md"
-                />
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-xl font-semibold">{dish.name}</h3>
-                <p className="">{dish.description}</p>
-                <p className="font-semibold">{formatCurrency(dish.price)}</p>
-              </div>
+            <Link key={dish.id} href={`/dishes/${dish.id}`}>
+              <CardHome
+                imageUrl={dish.image}
+                description={dish.description}
+                price={dish.price}
+                title={dish.name}
+              />
             </Link>
           ))}
         </div>
-      </section>
+      </div>
     </div>
   );
 }

@@ -31,6 +31,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
+  //layout hoặc page nào sử dụng đa ngôn ngữ thì cần có unstable_setRequestLocale để có thể static rendering
   unstable_setRequestLocale(locale);
   const messages = await getMessages();
   return (

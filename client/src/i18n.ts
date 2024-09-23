@@ -1,12 +1,11 @@
+import { notFound } from "next/navigation";
 import { getRequestConfig } from "next-intl/server";
-import { getUserLocale } from "./services/locale";
+import { locales } from "./config";
 
-export default getRequestConfig(async () => {
-  // ngôn ngữ mặc đinh có thể đọc từ `cookies()`, `headers()`, v.v.
-  const locale = await getUserLocale();
+export default getRequestConfig(async ({ locale }) => {
+  if (!locales.includes(locale as any)) notFound();
 
   return {
-    locale,
     messages: (await import(`../messages/${locale}.json`)).default,
   };
 });

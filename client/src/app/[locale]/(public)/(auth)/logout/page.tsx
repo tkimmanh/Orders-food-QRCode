@@ -2,8 +2,9 @@
 import { useAppStore } from "@/components/app-provider";
 import { getRefreshTokenFormLocalStorage } from "@/lib/utils";
 import { useLogoutMutation } from "@/queries/useAuth";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "@/navigation";
 import React, { Suspense, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 
 function Logout() {
   const { mutateAsync } = useLogoutMutation();

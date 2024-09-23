@@ -1,6 +1,6 @@
 "use client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/navigation";
 import React, { ReactNode } from "react";
 
 const ModalDishDetail = ({ children }: { children: ReactNode }) => {

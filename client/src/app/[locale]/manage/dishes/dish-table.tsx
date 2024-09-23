@@ -45,13 +45,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { formatCurrency, getVietnameseDishStatus } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
+
 import AutoPagination from "@/components/auto-pagination";
 import EditDish from "@/app/[locale]/manage/dishes/edit-dish";
 import AddDish from "@/app/[locale]/manage/dishes/add-dish";
 import { DishListResType } from "@/schemaValidations/dish.schema";
 import { useDeleteDishMutation, useListDishes } from "@/queries/useDishe";
 import { toast } from "@/hooks/use-toast";
+import { useSearchParams } from "next/navigation";
 
 type DishItem = DishListResType["data"][0];
 

@@ -2,8 +2,9 @@
 import { useAppStore } from "@/components/app-provider";
 import { toast } from "@/hooks/use-toast";
 import { decodeToken, generateSocketInstance } from "@/lib/utils";
+import { useRouter } from "@/navigation";
 import { useSetTokenToCookieMutation } from "@/queries/useAuth";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef } from "react";
 
 function OAuth() {

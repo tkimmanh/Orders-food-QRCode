@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/select";
 import { TableStatus, TableStatusValues } from "@/constants/type";
 import { Switch } from "@/components/ui/switch";
-import Link from "next/link";
+import { Link } from "@/navigation";
 import {
   UpdateTableBody,
   UpdateTableBodyType,

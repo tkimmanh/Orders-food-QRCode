@@ -4,7 +4,8 @@ import {
   checkRefreshToken,
   getRefreshTokenFormLocalStorage,
 } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "@/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
 
 function RefreshToken() {

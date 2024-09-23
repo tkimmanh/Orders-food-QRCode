@@ -1,9 +1,9 @@
 import { dishesApiRequest } from "@/apiRequest/dishe";
 import { formatCurrency } from "@/lib/utils";
+import { Link } from "@/navigation";
 import { DishListResType } from "@/schemaValidations/dish.schema";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import Link from "next/link";
 
 export default async function Home() {
   let dishesList: DishListResType["data"] = [];
@@ -18,6 +18,7 @@ export default async function Home() {
   }
   // với async function sử dụng i18n thì sử dụng phương thức getTranslations() để lấy dữ liệu ngôn ngữ
   const t = await getTranslations("HomePage");
+
   return (
     <div className="w-full space-y-4">
       <div className="relative">
@@ -44,7 +45,7 @@ export default async function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
           {dishesList.map((dish) => (
             <Link
-              href={`dishes/${dish.id}`}
+              href={`/dishes/${dish.id}`}
               className="flex gap-4 w"
               key={dish.id}
             >

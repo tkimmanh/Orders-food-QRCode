@@ -1,8 +1,8 @@
 "use client";
 import { handleErrorApi } from "@/lib/utils";
 import { useLogoutMutation } from "@/queries/useAuth";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { usePathname } from "@/navigation";
+import { useRouter } from "@/navigation";
 import { useEffect } from "react";
 import { useAppStore } from "./app-provider";
 

@@ -10,11 +10,12 @@ import {
   GuestLoginBody,
   GuestLoginBodyType,
 } from "@/schemaValidations/guest.schema";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "@/navigation";
 import { useEffect } from "react";
 import { useGuestLoginMutation } from "@/queries/useGuest";
 import { generateSocketInstance, handleErrorApi } from "@/lib/utils";
 import { useAppStore } from "@/components/app-provider";
+import { useParams, useSearchParams } from "next/navigation";
 
 export default function GuestLoginForm() {
   const searchParams = useSearchParams();

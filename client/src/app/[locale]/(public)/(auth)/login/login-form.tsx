@@ -20,11 +20,16 @@ import {
   getAccessTokenFormLocalStorage,
   handleErrorApi,
 } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useAppStore } from "@/components/app-provider";
 import { envConfig } from "@/config";
-import { Link, useRouter } from "@/navigation";
+import Link from "next/link";
+import { useTranslations } from "next-intl";
+import {
+  SearchParamsLoader,
+  useSearchParamsLoader,
+} from "@/components/search-params-loader";
 
 const getOauthGoogleUrl = () => {
   const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -45,10 +50,11 @@ const getOauthGoogleUrl = () => {
 const googleOauthUrl = getOauthGoogleUrl();
 
 export default function LoginForm() {
+  const t = useTranslations("LoginPage");
   const loginMutation = useLoginMutation();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const clearToken = searchParams.get("clearToken");
+  const { searchParams, setSearchParams } = useSearchParamsLoader();
+  const clearToken = searchParams?.get("clearToken");
   const setRole = useAppStore((state) => state.setRole);
   const setSocket = useAppStore((state) => state.setSocket);
   const form = useForm<LoginBodyType>({
@@ -85,8 +91,9 @@ export default function LoginForm() {
 
   return (
     <Card className="mx-auto max-w-sm">
+      <SearchParamsLoader onParamsReceived={setSearchParams} />
       <CardHeader>
-        <CardTitle className="text-2xl">Đăng nhập</CardTitle>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
         <CardDescription>
           Nhập email và mật khẩu của bạn để đăng nhập vào hệ thống
         </CardDescription>

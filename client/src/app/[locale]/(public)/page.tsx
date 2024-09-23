@@ -2,10 +2,14 @@ import { dishesApiRequest } from "@/apiRequest/dishe";
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "@/navigation";
 import { DishListResType } from "@/schemaValidations/dish.schema";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 
-export default async function Home() {
+export default async function Home({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
   let dishesList: DishListResType["data"] = [];
   try {
     const result = await dishesApiRequest.list();
@@ -16,6 +20,7 @@ export default async function Home() {
   } catch (error) {
     return <div>Something went wrong</div>;
   }
+  unstable_setRequestLocale(locale);
   // với async function sử dụng i18n thì sử dụng phương thức getTranslations() để lấy dữ liệu ngôn ngữ
   const t = await getTranslations("HomePage");
 

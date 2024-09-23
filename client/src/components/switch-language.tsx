@@ -8,8 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Locale, locales } from "@/config";
 import { useLocale, useTranslations } from "next-intl";
-
-import React from "react";
+import React, { Suspense } from "react";
 import {
   useParams,
   usePathname,
@@ -17,7 +16,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 
-const SwitchLanguage = () => {
+function SwitchLanguageMain() {
   const t = useTranslations("SwitchLanguage");
   const local = useLocale();
   const pathname = usePathname();
@@ -50,6 +49,14 @@ const SwitchLanguage = () => {
         </SelectContent>
       </Select>
     </>
+  );
+}
+
+const SwitchLanguage = () => {
+  return (
+    <Suspense>
+      <SwitchLanguageMain />
+    </Suspense>
   );
 };
 

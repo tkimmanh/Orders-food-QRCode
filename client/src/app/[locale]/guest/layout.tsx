@@ -1,3 +1,4 @@
+import { defaultLocale } from "@/config";
 import Layout from "../(public)/layout";
 
 export default function GusetLayout({
@@ -5,5 +6,14 @@ export default function GusetLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Layout modal={null}>{children}</Layout>;
+  return (
+    <Layout
+      params={{
+        locale: defaultLocale,
+      }}
+      modal={null}
+    >
+      {children}
+    </Layout>
+  );
 }

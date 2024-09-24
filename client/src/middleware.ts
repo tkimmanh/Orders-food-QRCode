@@ -101,6 +101,5 @@ export function middleware(request: NextRequest) {
 }
 // middleware sẽ được áp dụng tại các route
 export const config = {
-  // matcher: ["/manage/:path*", "/guest/:path*", "/login"],
-  matcher: ["/", "/(vi|en)/:path*"],
+  matcher: ["/", "/(de|en)/:path*", "/((?!_next|_vercel|.*\\..*).*)"],
 };

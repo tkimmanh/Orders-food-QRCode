@@ -1,6 +1,6 @@
 import { dishesApiRequest } from "@/apiRequest/dishe";
-import { formatCurrency, wrapServerApi } from "@/lib/utils";
-import Image from "next/image";
+import { wrapServerApi } from "@/lib/utils";
+
 import React from "react";
 import DishesDetail from "./dishe-detail";
 

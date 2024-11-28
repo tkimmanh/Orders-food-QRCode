@@ -1,4 +1,5 @@
 import { envConfig } from "@/config";
+import Cookies from "js-cookie";
 import {
   getAccessTokenFormLocalStorage,
   normalizePath,
@@ -8,6 +9,7 @@ import {
 } from "@/lib/utils";
 import { LoginResType } from "@/schemaValidations/auth.schema";
 import { redirect } from "@/navigation";
+import { path } from "@/constants/type";
 
 type CustomOptions = Omit<RequestInit, "method"> & {
   baseUrl?: string | undefined;
@@ -125,6 +127,7 @@ const request = async <Response>(
       );
     } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
       if (isClient) {
+        const locale = Cookies.get("NEXT_LOCALE");
         if (!nextServerLogoutRequest) {
           nextServerLogoutRequest = fetch("/api/auth/logout", {
             method: "POST",
@@ -139,14 +142,14 @@ const request = async <Response>(
           } finally {
             removeTokenFromLocalStorage();
             nextServerLogoutRequest = null;
-            location.href = "/login";
+            location.href = `/${locale}/${path.LOGIN}`;
           }
         }
       } else {
         const accessToken = (options?.headers as any)?.Authorization.split(
           "Bearer "
         )[1];
-        redirect(`/logout?accessToken=${accessToken}`);
+        redirect(`${path.LOGOUT}?accessToken=${accessToken}`);
       }
     } else {
       throw new HttpError(data);
@@ -155,9 +158,11 @@ const request = async <Response>(
   // Đảm bảo logic dưới đây chỉ chạy ở phía client (browser)
   if (isClient) {
     const normalizeUrl = normalizePath(url);
+
     // thực hiện login lưu accessToken và refreshToken vào localStorage
     if (["api/auth/login", "api/guest/auth/login"].includes(normalizeUrl)) {
       const { accessToken, refreshToken } = (payload as LoginResType).data;
+
       setAccessTokenToLocalStorage(accessToken);
       setRefreshTokenToLocalStorage(refreshToken);
     }

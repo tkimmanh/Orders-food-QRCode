@@ -60,8 +60,8 @@ export default function LoginForm() {
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "admin@order.com",
+      password: "123456",
     },
   });
   // clear token

@@ -39,6 +39,8 @@ export const handleErrorApi = ({
       });
     });
   } else {
+    console.log("error", error);
+
     toast({
       title: "Lỗi",
       description: error?.payload?.message ?? "Lỗi không xác định",
@@ -177,10 +179,15 @@ export const getTableLink = ({
 }: {
   token: string;
   tableNumber: number;
-  locale?: string
+  locale?: string;
 }) => {
   return (
-    envConfig.NEXT_PUBLIC_URL + `/${locale}/` + `tables/` + tableNumber + "?token=" + token
+    envConfig.NEXT_PUBLIC_URL +
+    `/${locale}/` +
+    `tables/` +
+    tableNumber +
+    "?token=" +
+    token
   );
 };
 

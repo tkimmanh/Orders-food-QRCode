@@ -9,7 +9,7 @@ config({
 
 const checkEnv = async () => {
   const chalk = (await import('chalk')).default
-  if (process.env.NODE_ENV !== 'production' && !fs.existsSync(path.resolve('.env'))) {
+  if (!fs.existsSync(path.resolve('.env'))) {
     console.log(chalk.red(`Không tìm thấy file môi trường .env`))
     process.exit(1)
   }
@@ -34,7 +34,10 @@ const configSchema = z.object({
   GOOGLE_REDIRECT_CLIENT_URL: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  GOOGLE_AUTHORIZED_REDIRECT_URI: z.string()
+  GOOGLE_AUTHORIZED_REDIRECT_URI: z.string(),
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string()
 })
 
 const configServer = configSchema.safeParse(process.env)

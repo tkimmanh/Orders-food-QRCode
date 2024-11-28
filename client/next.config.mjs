@@ -7,9 +7,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "https://orders-food-qr-code.vercel.app",
-        port: "",
+        hostname: "localhost",
         pathname: "/**",
       },
       {

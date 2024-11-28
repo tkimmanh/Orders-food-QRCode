@@ -18,7 +18,8 @@
   },
 
   "LoginPage": {
-    "title": "Đăng nhập"
+    "title": "Đăng nhập",
+    "description": "Đăng nhập để quản lý đơn hàng và món ăn"
   },
   "SwitchLanguage": {
     "title": "Chuyển ngôn ngữ",

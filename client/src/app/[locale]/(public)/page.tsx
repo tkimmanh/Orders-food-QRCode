@@ -4,6 +4,7 @@ import ButtonBorder from "@/components/button-border";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Button } from "@/components/ui/button";
 import { FlipWords } from "@/components/ui/flip-words";
+import { path } from "@/constants/type";
 import { Link } from "@/navigation";
 import { DishListResType } from "@/schemaValidations/dish.schema";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
@@ -50,7 +51,7 @@ export default async function Home({
         <h1 className="lg:text-3xl text-2xl font-medium mb-10">{t("list")}</h1>
         <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 w-full gap-3">
           {dishesList.map((dish) => (
-            <Link key={dish.id} href={`/dishes/${dish.id}`}>
+            <Link key={dish.id} href={`${path.DISHES}/${dish.id}`}>
               <CardHome
                 imageUrl={dish.image}
                 description={dish.description}

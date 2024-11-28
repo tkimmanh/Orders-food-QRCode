@@ -18,7 +18,8 @@
   },
 
   "LoginPage": {
-    "title": "Login"
+    "title": "Login",
+    "description": "Login to manage orders and dishes"
   },
   "SwitchLanguage": {
     "title": "Switch language",
